@@ -1,0 +1,22 @@
+meta {
+  name: Refresh Token
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/auth/refresh-token
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

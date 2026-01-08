@@ -1,0 +1,8 @@
+# Temporary File
+tmp/
+
+# Environment File
+*.env
+
+# Database File
+*.db
