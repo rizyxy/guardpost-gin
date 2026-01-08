@@ -6,3 +6,6 @@ tmp/
 
 # Database File
 *.db
+
+# Routes File
+routes.yaml

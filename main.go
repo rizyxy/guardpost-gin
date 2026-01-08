@@ -14,10 +14,16 @@ func main() {
 	// Load Dotenv
 	config.LoadDotEnv()
 
+	// Load Config
+	c, _ := config.LoadConfig("routes.yaml")
+
+	// Load Routes
+	config.LoadRoutes(c, engine)
+
 	// Load Database
 	config.ConnectToDB()
 
-	// Init Routes
+	// Init Internal Routes
 	routes.InitRoutes(engine)
 
 	// Run Engine
