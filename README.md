@@ -20,7 +20,8 @@ Guardpost Gin is a powerful and lightweight API Gateway and Reverse Proxy built 
 
 ## 📋 Prerequisites
 
-- [Go](https://go.dev/dl/) 1.21 or higher
+- [Go](https://go.dev/dl/) 1.25 or higher
+- [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) (optional, for containerized deployment)
 - [Air](https://github.com/air-verse/air) (optional, for live reloading)
 
 ## ⚙️ Installation
@@ -32,13 +33,7 @@ Guardpost Gin is a powerful and lightweight API Gateway and Reverse Proxy built 
    cd guardpost-gin
    ```
 
-2. **Install dependencies:**
-
-   ```bash
-   go mod tidy
-   ```
-
-3. **Setup environment variables:**
+2. **Setup environment variables:**
 
    ```bash
    cp .env.example .env
@@ -46,7 +41,7 @@ Guardpost Gin is a powerful and lightweight API Gateway and Reverse Proxy built 
 
    Edit `.env` and set your `JWT_SECRET` and `DB_URL` (usually `test.db`).
 
-4. **Configure routes:**
+3. **Configure routes:**
    ```bash
    cp routes-example.yaml routes.yaml
    ```
@@ -54,15 +49,34 @@ Guardpost Gin is a powerful and lightweight API Gateway and Reverse Proxy built 
 
 ## 🚀 Running the Application
 
+### Using Makefile (Recommended)
+
+The project includes a `Makefile` for common tasks:
+
+```bash
+make build          # Build the binary
+make run            # Build and run the gateway
+make docker-up      # Start the gateway using Docker Compose
+make docker-down    # Stop the Docker containers
+make clean          # Remove binary and data directory
+```
+
 ### Development (with Air)
 
 ```bash
 air
 ```
 
-### Production
+### Using Docker Compose
 
 ```bash
+docker-compose up --build -d
+```
+
+### Manual Run
+
+```bash
+go mod tidy
 go run main.go
 ```
 
@@ -81,7 +95,7 @@ routes:
 
 ### Environment Variables (`.env`)
 
-- `DB_URL`: Path to your SQLite database.
+- `DB_URL`: Path to your database file.
 - `JWT_SECRET`: Secret key for signing tokens.
 
 ## 📂 Project Structure
@@ -93,6 +107,9 @@ routes:
 - `repository/`: Data access layer.
 - `routes/`: Routing logic for the auth system.
 - `bruno/`: API collection for Bruno.
+- `Dockerfile`: Container image definition.
+- `docker-compose.yaml`: Multi-container orchestration.
+- `Makefile`: Shortcut commands for development.
 - `main.go`: Application entry point.
 
 ## 🧪 Testing with Bruno
