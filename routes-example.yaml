@@ -2,3 +2,4 @@ routes:
   - path: /rizyxy
     method: GET
     downstream: https://github.com
+    protected: true

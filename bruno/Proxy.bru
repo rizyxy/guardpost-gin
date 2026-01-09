@@ -1,0 +1,20 @@
+meta {
+  name: Proxy
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:8080/rizyxy
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"guardpost-gin/internal/middleware"
 	"guardpost-gin/internal/models"
 	"net/http/httputil"
 	"net/url"
@@ -13,12 +14,18 @@ func LoadRoutes(config *models.Config, engine *gin.Engine) {
 		targetURL, _ := url.Parse(route.Downstream)
 		proxy := httputil.NewSingleHostReverseProxy(targetURL)
 
-		// Register the route dynamically
-		engine.Handle(route.Method, route.Path, func(c *gin.Context) {
-			// Optional: Add gateway logic here (Auth, Logging, Rate Limiting)
+		handlers := []gin.HandlerFunc{}
 
-			// Forward the request
+		// Authentication Middleware
+		if route.Protected {
+			handlers = append(handlers, middleware.IsAuthenticated())
+		}
+
+		// Proxy Handler
+		handlers = append(handlers, func(c *gin.Context) {
 			proxy.ServeHTTP(c.Writer, c.Request)
 		})
+
+		engine.Handle(route.Method, route.Path, handlers...)
 	}
 }

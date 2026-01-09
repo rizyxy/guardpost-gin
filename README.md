@@ -6,13 +6,14 @@ Guardpost Gin is a powerful and lightweight API Gateway and Reverse Proxy built 
 
 - **Dynamic Reverse Proxy**: Configure routes and downstream services via `routes.yaml`.
 - **Authentication System**: Built-in support for User Registration, Login, and JWT-based authentication.
+- **Protected Routes**: Ability to secure proxy routes with a simple `protected: true` flag.
 - **Refresh Token Support**: Secure token refresh mechanism to maintain user sessions.
 - **Live Reloading**: Seamless development experience using [Air](https://github.com/air-verse/air).
 - **API Documentation**: Pre-configured [Bruno](https://usebruno.com/) collections for easy testing.
 
 ## 🛠️ Tech Stack
 
-- **Language**: Go (Golang)
+- **Language**: Go (Golang) 1.25.x
 - **Web Framework**: [Gin Gonic](https://gin-gonic.com/)
 - **ORM**: [GORM](https://gorm.io/)
 - **Security**: JWT (JSON Web Tokens), bcrypt for password hashing
@@ -84,37 +85,51 @@ go run main.go
 
 ### Dynamic Routes (`routes.yaml`)
 
-Define your proxy routes in `routes.yaml`:
+Define your proxy routes in `routes.yaml`. You can specify whether a route requires authentication:
 
 ```yaml
 routes:
-  - path: /example
+  - path: /external-api
     method: GET
-    downstream: https://api.example.com
+    downstream: https://api.external-service.com
+    protected: true # Requires valid JWT Bearer Token
+
+  - path: /public-info
+    method: GET
+    downstream: https://api.public-service.com
+    protected: false # No authentication required
 ```
 
 ### Environment Variables (`.env`)
 
-- `DB_URL`: Path to your database file.
+- `PORT`: Port the gateway will listen on (default: `8080`).
+- `DB_URL`: Path to your database file (e.g., `test.db`).
 - `JWT_SECRET`: Secret key for signing tokens.
 
 ## 📂 Project Structure
 
+- `main.go`: Application entry point.
 - `config/`: Configuration loaders (DB, Env, Routes).
-- `internal/`: Core logic and internal API routes.
-- `controllers/`: Auth and request handling logic.
-- `models/`: GORM database models.
-- `repository/`: Data access layer.
-- `routes/`: Routing logic for the auth system.
+- `internal/`: Core logic of the application.
+  - `controllers/`: Request handling logic (Auth).
+  - `middleware/`: Gin middleware (Authentication).
+  - `models/`: GORM database models and configuration structures.
+  - `repository/`: Data access layer.
+  - `requests/`: Request validation structures.
+  - `routes/`: Routing logic for auth and proxy.
+  - `utils/`: Common utilities (JWT, password hashing).
 - `bruno/`: API collection for Bruno.
 - `Dockerfile`: Container image definition.
 - `docker-compose.yaml`: Multi-container orchestration.
 - `Makefile`: Shortcut commands for development.
-- `main.go`: Application entry point.
 
 ## 🧪 Testing with Bruno
 
-Import the collection found in the `bruno/` directory into [Bruno](https://usebruno.com/) to start testing the authentication and proxy endpoints.
+Import the collection found in the `bruno/` directory into [Bruno](https://usebruno.com/) to start testing the authentication and proxy endpoints. Available auth endpoints:
+
+- `POST /auth/register`: Register a new user.
+- `POST /auth/login`: Authenticate and get tokens.
+- `POST /auth/refresh-token`: Get a new access token using a refresh token.
 
 ## 📄 License
 
