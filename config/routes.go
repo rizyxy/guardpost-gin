@@ -10,11 +10,18 @@ import (
 )
 
 func LoadRoutes(config *models.Config, engine *gin.Engine) {
+
+	// Init Rate Limiter
+	limiter := middleware.NewIPRateLimiter(10, 10)
+
 	for _, route := range config.Routes {
 		targetURL, _ := url.Parse(route.Downstream)
 		proxy := httputil.NewSingleHostReverseProxy(targetURL)
 
 		handlers := []gin.HandlerFunc{}
+
+		// Rate Limiter
+		handlers = append(handlers, middleware.LimitRate(limiter))
 
 		// Authentication Middleware
 		if route.Protected {

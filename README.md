@@ -7,6 +7,7 @@ Guardpost Gin is a powerful and lightweight API Gateway and Reverse Proxy built 
 - **Dynamic Reverse Proxy**: Configure routes and downstream services via `routes.yaml`.
 - **Authentication System**: Built-in support for User Registration, Login, and JWT-based authentication.
 - **Protected Routes**: Ability to secure proxy routes with a simple `protected: true` flag.
+- **IP-based Rate Limiting**: Protect your services from abuse with built-in rate limiting (Token Bucket algorithm).
 - **Refresh Token Support**: Secure token refresh mechanism to maintain user sessions.
 - **Live Reloading**: Seamless development experience using [Air](https://github.com/air-verse/air).
 - **API Documentation**: Pre-configured [Bruno](https://usebruno.com/) collections for easy testing.
@@ -100,6 +101,15 @@ routes:
     protected: false # No authentication required
 ```
 
+### Rate Limiting
+
+The gateway includes a built-in IP-based rate limiter using the Token Bucket algorithm. By default, it is configured to allow:
+
+- **Rate**: 10 requests per second.
+- **Burst**: 10 requests.
+
+When a limit is exceeded, the gateway returns a `429 Too Many Requests` response.
+
 ### Environment Variables (`.env`)
 
 - `PORT`: Port the gateway will listen on (default: `8080`).
@@ -112,7 +122,7 @@ routes:
 - `config/`: Configuration loaders (DB, Env, Routes).
 - `internal/`: Core logic of the application.
   - `controllers/`: Request handling logic (Auth).
-  - `middleware/`: Gin middleware (Authentication).
+  - `middleware/`: Gin middleware (Authentication, Rate Limiting).
   - `models/`: GORM database models and configuration structures.
   - `repository/`: Data access layer.
   - `requests/`: Request validation structures.
