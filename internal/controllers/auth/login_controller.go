@@ -19,9 +19,9 @@ func LoginController(c *gin.Context) {
 	}
 
 	// Find User by Email
-	user := repository.FindUserByEmail(loginRequest.Email)
+	user, err := repository.FindUserByEmail(loginRequest.Email)
 
-	if user == nil {
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Invalid credentials"})
 		return
 	}
