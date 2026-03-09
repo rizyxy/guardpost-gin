@@ -1,7 +1,7 @@
 package config
 
 import (
-	"guardpost-gin/src/models"
+	"guardpost-gin/src/internal/models"
 	"os"
 
 	"gorm.io/driver/sqlite"

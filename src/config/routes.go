@@ -1,8 +1,8 @@
 package config
 
 import (
-	"guardpost-gin/src/middleware"
-	"guardpost-gin/src/models"
+	"guardpost-gin/src/internal/middleware"
+	"guardpost-gin/src/internal/models"
 	"net/http/httputil"
 	"net/url"
 	"os"
