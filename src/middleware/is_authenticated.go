@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"guardpost-gin/internal/utils"
+	"guardpost-gin/src/internal/utils"
 	"net/http"
 	"strings"
 

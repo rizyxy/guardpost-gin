@@ -1,17 +1,30 @@
 package config
 
 import (
-	"guardpost-gin/internal/middleware"
-	"guardpost-gin/internal/models"
+	"guardpost-gin/src/middleware"
+	"guardpost-gin/src/models"
 	"net/http/httputil"
 	"net/url"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/goccy/go-yaml"
 )
+
+func LoadRouteFile(filename string) (*models.Config, error) {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	var config models.Config
+	err = yaml.Unmarshal(data, &config)
+
+	return &config, err
+}
 
 func LoadRoutes(config *models.Config, engine *gin.Engine) {
 
-	// Init Rate Limiter
 	limiter := middleware.NewIPRateLimiter(10, 10)
 
 	for _, route := range config.Routes {
@@ -20,15 +33,12 @@ func LoadRoutes(config *models.Config, engine *gin.Engine) {
 
 		handlers := []gin.HandlerFunc{}
 
-		// Rate Limiter
 		handlers = append(handlers, middleware.LimitRate(limiter))
 
-		// Authentication Middleware
 		if route.Protected {
 			handlers = append(handlers, middleware.IsAuthenticated())
 		}
 
-		// Proxy Handler
 		handlers = append(handlers, func(c *gin.Context) {
 			proxy.ServeHTTP(c.Writer, c.Request)
 		})

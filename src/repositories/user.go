@@ -1,28 +1,25 @@
-package repository
+package repositories
 
 import (
 	"errors"
 	"guardpost-gin/config"
-	"guardpost-gin/internal/models"
-	requests "guardpost-gin/internal/requests/auth"
-	"guardpost-gin/internal/utils"
+	"guardpost-gin/src/internal/requests"
+	"guardpost-gin/src/internal/utils"
+	"guardpost-gin/src/models"
 )
 
 func CreateUser(request *requests.RegisterRequest) error {
 
-	// Check if user exists
 	_, err := FindUserByEmail(request.Email)
 	if err == nil {
 		return errors.New("user already exists")
 	}
 
-	// Hash Password
 	hashedPassword, err := utils.HashPassword(request.Password)
 	if err != nil {
 		return err
 	}
 
-	// Create User Instance
 	user := models.User{
 		Name:     request.Name,
 		Email:    request.Email,

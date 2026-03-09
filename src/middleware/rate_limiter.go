@@ -8,7 +8,6 @@ import (
 	"golang.org/x/time/rate"
 )
 
-// IPRateLimiter manages limiters for different IP addresses
 type IPRateLimiter struct {
 	ips map[string]*rate.Limiter
 	mu  sync.RWMutex

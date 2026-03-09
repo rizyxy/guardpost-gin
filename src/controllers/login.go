@@ -1,9 +1,9 @@
-package controller
+package controllers
 
 import (
-	"guardpost-gin/internal/repository"
-	requests "guardpost-gin/internal/requests/auth"
-	"guardpost-gin/internal/utils"
+	"guardpost-gin/src/internal/requests"
+	"guardpost-gin/src/internal/utils"
+	"guardpost-gin/src/repositories"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,28 +12,24 @@ import (
 func LoginController(c *gin.Context) {
 	var loginRequest requests.LoginRequest
 
-	// Bind JSON Request
 	if err := c.ShouldBindJSON(&loginRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
 
-	// Find User by Email
-	user, err := repository.FindUserByEmail(loginRequest.Email)
+	user, err := repositories.FindUserByEmail(loginRequest.Email)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Invalid credentials"})
 		return
 	}
 
-	// Verify Password
 	if err := utils.VerifyPassword(loginRequest.Password, user.Password); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
 
-	// Generate Token
-	accessToken, refreshToken, err := utils.GenerateToken()
+	accessToken, refreshToken, err := utils.GenerateAccessAndRefreshToken()
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})

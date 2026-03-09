@@ -1,8 +1,8 @@
-package controller
+package controllers
 
 import (
-	"guardpost-gin/internal/repository"
-	requests "guardpost-gin/internal/requests/auth"
+	"guardpost-gin/src/internal/requests"
+	"guardpost-gin/src/repositories"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,14 +11,12 @@ import (
 func RegisterController(c *gin.Context) {
 	var registerRequest requests.RegisterRequest
 
-	// Bind JSON Request
 	if err := c.ShouldBindJSON(&registerRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
 
-	// Register User to DB
-	err := repository.CreateUser(&registerRequest)
+	err := repositories.CreateUser(&registerRequest)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
